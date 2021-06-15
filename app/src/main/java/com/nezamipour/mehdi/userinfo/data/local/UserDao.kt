@@ -13,7 +13,7 @@ interface UserDao {
     @Query("DELETE FROM user_table")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM user_table")
+    @Query("SELECT * FROM user_table ORDER BY id ASC")
     fun getPagingSource(): PagingSource<Int, User>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
