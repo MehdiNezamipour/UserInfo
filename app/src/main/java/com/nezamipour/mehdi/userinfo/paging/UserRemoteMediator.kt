@@ -17,7 +17,8 @@ import javax.inject.Inject
 class UserRemoteMediator @Inject constructor(
     private val appDatabase: AppDatabase,
     private val apiService: ApiService,
-    private val initialPage: Int = 1
+    private val initialPage: Int = 1,
+    private val perPage: Int = 2
 ) : RemoteMediator<Int, User>() {
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, User>): MediatorResult {
@@ -31,7 +32,7 @@ class UserRemoteMediator @Inject constructor(
             }
         }
         return try {
-            val response = apiService.getUsers(page)
+            val response = apiService.getUsers(page, perPage)
             val isEndOfList = response.body()?.users?.isEmpty()
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -48,6 +49,7 @@ class UserRemoteMediator @Inject constructor(
                 }
                 response.body()?.users?.let { appDatabase.userDao().insertAll(it) }
             }
+
             return MediatorResult.Success(endOfPaginationReached = isEndOfList == true)
 
         } catch (e: IOException) {
@@ -79,5 +81,5 @@ class UserRemoteMediator @Inject constructor(
             }
     }
 
-
 }
+

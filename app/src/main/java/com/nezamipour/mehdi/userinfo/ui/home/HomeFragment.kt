@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.nezamipour.mehdi.userinfo.R
 import com.nezamipour.mehdi.userinfo.databinding.FragmentHomeBinding
 import com.nezamipour.mehdi.userinfo.paging.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,22 +49,23 @@ class HomeFragment : Fragment() {
 
 
     private fun initUi() {
-        binding.homeRecyclerView.addItemDecoration(DividerItemDecoration(
-            requireContext(),
-            DividerItemDecoration.VERTICAL
-        ))
+        binding.homeRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         binding.homeRecyclerView.setHasFixedSize(true)
-        binding.homeRecyclerView.adapter = adapter
 
 
-        /*    viewLifecycleOwner.lifecycleScope.launch {
-                adapter.loadStateFlow.collectLatest { loadStates ->
-                    binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
-                    binding.buttonRetry.isVisible = loadStates.refresh !is LoadState.Loading
-                    binding.textViewError.isVisible = loadStates.refresh is LoadState.Error
-                }
-            }*/
+        /*      viewLifecycleOwner.lifecycleScope.launch {
+                  adapter.loadStateFlow.collectLatest { loadStates ->
+                      if (loadStates.source.append.endOfPaginationReached) {
+                          binding.buttonLoadMore.visibility = View.VISIBLE
+                      }
+                  }
+              }*/
 
     }
 

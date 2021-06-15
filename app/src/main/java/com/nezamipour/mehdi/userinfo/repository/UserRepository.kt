@@ -20,7 +20,7 @@ class UserRepository @Inject constructor(
     fun getResult(): Flow<PagingData<User>> {
         val pagingSourceFactory = { database.userDao().getPagingSource() }
         return Pager(
-            config = PagingConfig(pageSize = 6, enablePlaceholders = false),
+            config = PagingConfig(pageSize = 2, enablePlaceholders = false),
             remoteMediator = UserRemoteMediator(database, apiService),
             pagingSourceFactory = pagingSourceFactory
         ).flow
