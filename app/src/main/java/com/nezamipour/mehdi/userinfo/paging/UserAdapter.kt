@@ -6,8 +6,9 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.nezamipour.mehdi.userinfo.data.model.User
 import com.nezamipour.mehdi.userinfo.databinding.ListItemLayoutBinding
+import javax.inject.Inject
 
-class UserAdapter : PagingDataAdapter<User, UserViewHolder>(DIFF_CALLBACK) {
+class UserAdapter @Inject constructor() : PagingDataAdapter<User, UserViewHolder>(DIFF_CALLBACK) {
     companion object {
 
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<User>() {

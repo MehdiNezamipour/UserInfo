@@ -2,6 +2,7 @@ package com.nezamipour.mehdi.userinfo.paging
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.nezamipour.mehdi.userinfo.R
 import com.nezamipour.mehdi.userinfo.data.model.User
 import com.nezamipour.mehdi.userinfo.databinding.ListItemLayoutBinding
@@ -23,6 +24,9 @@ class UserViewHolder(private val binding: ListItemLayoutBinding) :
         binding.imageViewAvatar.apply {
             Glide.with(binding.root)
                 .load(user.avatar)
+                .apply(
+                    RequestOptions.circleCropTransform()
+                )
                 .into(this)
         }
 

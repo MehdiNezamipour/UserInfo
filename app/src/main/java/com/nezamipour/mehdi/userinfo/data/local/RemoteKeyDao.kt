@@ -1,12 +1,10 @@
 package com.nezamipour.mehdi.userinfo.data.local
 
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.nezamipour.mehdi.userinfo.data.model.RemoteKey
 import com.nezamipour.mehdi.userinfo.data.model.User
 
+@Dao
 interface RemoteKeyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

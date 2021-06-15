@@ -32,7 +32,7 @@ class UserRemoteMediator @Inject constructor(
         }
         return try {
             val response = apiService.getUsers(page)
-            val isEndOfList = response.body()?.isEmpty()
+            val isEndOfList = response.body()?.users?.isEmpty()
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     appDatabase.remoteKeyDao().deleteAll()
@@ -40,13 +40,13 @@ class UserRemoteMediator @Inject constructor(
                 }
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (isEndOfList == true) null else page + 1
-                val keys = response.body()?.map {
+                val keys = response.body()?.users?.map {
                     RemoteKey(it.id, nextKey = nextKey, prevKey = prevKey)
                 }
                 if (keys != null) {
                     appDatabase.remoteKeyDao().insertAll(keys)
                 }
-                response.body()?.let { appDatabase.userDao().insertAll(it) }
+                response.body()?.users?.let { appDatabase.userDao().insertAll(it) }
             }
             return MediatorResult.Success(endOfPaginationReached = isEndOfList == true)
 
@@ -57,10 +57,10 @@ class UserRemoteMediator @Inject constructor(
         }
     }
 
-    private suspend fun getPageKeyData(loadType: LoadType, state: PagingState<Int, User>): Any? {
+    private suspend fun getPageKeyData(loadType: LoadType, state: PagingState<Int, User>): Any {
         return when (loadType) {
             LoadType.REFRESH -> {
-                null
+                initialPage
             }
             LoadType.PREPEND -> {
                 return MediatorResult.Success(endOfPaginationReached = true)
