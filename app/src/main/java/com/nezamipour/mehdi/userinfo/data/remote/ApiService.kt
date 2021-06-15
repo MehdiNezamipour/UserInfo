@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET
-    suspend fun getUsers(@Query("page") page: Int): Response<List<User>>
+    suspend fun getUsers(@Query("page") page: Int?): Response<List<User>>
 
     @GET("/{id}")
     suspend fun getSingle(@Path("id") id: Int): Response<User>

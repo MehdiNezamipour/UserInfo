@@ -1,16 +1,13 @@
 package com.nezamipour.mehdi.userinfo.data.local
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.nezamipour.mehdi.userinfo.data.model.User
 
 @Dao
 interface UserDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(users: List<User>)
 
     @Query("DELETE FROM user_table")
@@ -19,7 +16,11 @@ interface UserDao {
     @Query("SELECT * FROM user_table")
     fun getPagingSource(): PagingSource<Int, User>
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateAll(users: List<User>)
+
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun update(users: User)
 
 }
