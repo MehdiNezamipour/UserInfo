@@ -28,6 +28,7 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageView_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -60,7 +61,7 @@
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textView_full_name"
             style="@style/bold_24sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,7 +87,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_full_name" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

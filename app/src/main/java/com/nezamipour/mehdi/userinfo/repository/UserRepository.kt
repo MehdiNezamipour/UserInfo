@@ -24,7 +24,6 @@ class UserRepository @Inject constructor(
         return Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
-                maxSize = PAGE_SIZE + (2 * PAGE_SIZE),
                 enablePlaceholders = false
             ),
             remoteMediator = UserRemoteMediator(database, apiService),

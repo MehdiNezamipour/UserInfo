@@ -8,7 +8,11 @@ import com.nezamipour.mehdi.userinfo.data.model.User
 import com.nezamipour.mehdi.userinfo.databinding.ListItemLayoutBinding
 import javax.inject.Inject
 
-class UserAdapter @Inject constructor() : PagingDataAdapter<User, UserViewHolder>(DIFF_CALLBACK) {
+class UserAdapter @Inject constructor() :
+    PagingDataAdapter<User, UserViewHolder>(DIFF_CALLBACK) {
+
+    lateinit var userClickListener: UserClickListener
+
     companion object {
 
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<User>() {
@@ -35,7 +39,7 @@ class UserAdapter @Inject constructor() : PagingDataAdapter<User, UserViewHolder
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ), userClickListener = userClickListener
         )
     }
 }

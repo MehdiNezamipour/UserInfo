@@ -1,6 +1,5 @@
 package com.nezamipour.mehdi.userinfo.paging
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -24,7 +23,6 @@ class UserRemoteMediator @Inject constructor(
     override suspend fun initialize(): InitializeAction {
         return InitializeAction.LAUNCH_INITIAL_REFRESH
     }
-
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, User>): MediatorResult {
         val pageKeyData = getPageKeyData(loadType, state)

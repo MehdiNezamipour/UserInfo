@@ -19,7 +19,7 @@ class UserLoadStateViewHolder(
 
     fun bind(loadState: LoadState) {
         if (loadState is LoadState.Error) {
-            binding.textViewError.text = loadState.error.localizedMessage
+            binding.textViewError.text = binding.root.context.getString(R.string.network_error)
         }
         binding.progressBar.isVisible = loadState is LoadState.Loading
         binding.buttonRetry.isVisible = loadState !is LoadState.Loading

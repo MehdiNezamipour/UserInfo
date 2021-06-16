@@ -1,32 +1,26 @@
 package com.nezamipour.mehdi.userinfo.ui.home
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
+import com.nezamipour.mehdi.userinfo.data.model.User
 import com.nezamipour.mehdi.userinfo.databinding.FragmentHomeBinding
 import com.nezamipour.mehdi.userinfo.paging.UserAdapter
+import com.nezamipour.mehdi.userinfo.paging.UserClickListener
 import com.nezamipour.mehdi.userinfo.paging.UserLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import java.time.Duration
 
 
 @AndroidEntryPoint
@@ -36,6 +30,19 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
     private val pagingAdapter by lazy { UserAdapter() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        pagingAdapter.userClickListener = object : UserClickListener {
+            override fun onUserClicked(user: User) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
+                        user
+                    )
+                )
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,19 +86,19 @@ class HomeFragment : Fragment() {
         binding.swipeRefresher.setOnRefreshListener {
             pagingAdapter.refresh()
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            pagingAdapter.loadStateFlow.distinctUntilChangedBy {
-                it.refresh
-            }
-                .filter {
-                    it.refresh is LoadState.NotLoading
-                }
-                .collect {
-                    binding.homeRecyclerView.scrollToPosition(0)
-                }
-        }
-
-        binding.homeRecyclerView.adapter = pagingAdapter.withLoadStateFooter(
+        /* viewLifecycleOwner.lifecycleScope.launch {
+             pagingAdapter.loadStateFlow.distinctUntilChangedBy {
+                 it.refresh
+             }
+                 .filter {
+                     it.refresh is LoadState.NotLoading
+                 }
+                 .collect {
+                     binding.homeRecyclerView.scrollToPosition(0)
+                 }
+         }*/
+        binding.homeRecyclerView.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
+            header = UserLoadStateAdapter { pagingAdapter.retry() },
             footer = UserLoadStateAdapter { pagingAdapter.retry() }
         )
 
