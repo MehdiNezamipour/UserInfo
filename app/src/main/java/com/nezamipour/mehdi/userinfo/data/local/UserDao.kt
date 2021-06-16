@@ -23,4 +23,8 @@ interface UserDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(users: User)
 
+    @Query("SELECT * FROM user_table")
+    suspend fun getDummyUsers(): List<User>
+
+
 }

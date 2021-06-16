@@ -11,9 +11,9 @@ interface ApiService {
 
     @GET(Constants.USERS)
     suspend fun getUsers(
-        @Query("page") page: Int?,
+        @Query("page") page: Int,
         @Query("per_page") perPage: Int
-    ): Response<UserResult>
+    ): UserResult
 
     @GET(Constants.USERS + "{id}")
     suspend fun getSingle(@Path("id") id: Int): Response<User>

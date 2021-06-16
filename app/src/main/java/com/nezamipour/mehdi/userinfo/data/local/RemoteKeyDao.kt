@@ -14,7 +14,7 @@ interface RemoteKeyDao {
     suspend fun deleteAll()
 
     @Query("SELECT * FROM remote_key WHERE id=:id")
-    suspend fun getRemoteKey(id: Int): RemoteKey
+    suspend fun getRemoteKey(id: Int): RemoteKey?
 
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

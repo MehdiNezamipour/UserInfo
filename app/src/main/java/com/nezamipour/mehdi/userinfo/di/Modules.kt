@@ -2,6 +2,9 @@ package com.nezamipour.mehdi.userinfo.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.nezamipour.mehdi.userinfo.data.local.AppDatabase
 import com.nezamipour.mehdi.userinfo.data.remote.ApiService
 import com.nezamipour.mehdi.userinfo.data.remote.Constants
@@ -19,6 +22,7 @@ import javax.inject.Singleton
 class SingletonModules {
 
     // Network
+
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
