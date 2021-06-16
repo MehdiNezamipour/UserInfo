@@ -7,7 +7,10 @@ import com.nezamipour.mehdi.userinfo.R
 import com.nezamipour.mehdi.userinfo.data.model.User
 import com.nezamipour.mehdi.userinfo.databinding.ListItemLayoutBinding
 
-class UserViewHolder(private val binding: ListItemLayoutBinding) :
+class UserViewHolder(
+    private val binding: ListItemLayoutBinding,
+    private val userClickListener: UserClickListener
+) :
     RecyclerView.ViewHolder(binding.root) {
 
     var user: User? = null
@@ -29,7 +32,9 @@ class UserViewHolder(private val binding: ListItemLayoutBinding) :
                 )
                 .into(this)
         }
-
+        binding.root.setOnClickListener {
+            userClickListener.onUserClicked(user)
+        }
 
     }
 

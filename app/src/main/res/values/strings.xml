@@ -6,5 +6,13 @@
     <string name="user_full_name">%s %s</string>
     <string name="retry">retry</string>
     <string name="try_again">Try Again</string>
+    <string name="load_more">Load More</string>
+    <string name="network_error">Network Error</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 
 </resources>

@@ -10,7 +10,10 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET(Constants.USERS)
-    suspend fun getUsers(@Query("page") page: Int?): Response<UserResult>
+    suspend fun getUsers(
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): UserResult
 
     @GET(Constants.USERS + "{id}")
     suspend fun getSingle(@Path("id") id: Int): Response<User>

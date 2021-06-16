@@ -18,5 +18,9 @@
         android:id="@+id/detailsFragment"
         android:name="com.nezamipour.mehdi.userinfo.ui.detail.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="user"
+            app:argType="com.nezamipour.mehdi.userinfo.data.model.User" />
+    </fragment>
 </navigation>

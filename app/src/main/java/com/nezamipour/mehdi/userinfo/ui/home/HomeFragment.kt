@@ -4,21 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.nezamipour.mehdi.userinfo.R
+import com.google.android.material.snackbar.Snackbar
+import com.nezamipour.mehdi.userinfo.data.model.User
 import com.nezamipour.mehdi.userinfo.databinding.FragmentHomeBinding
 import com.nezamipour.mehdi.userinfo.paging.UserAdapter
+import com.nezamipour.mehdi.userinfo.paging.UserClickListener
+import com.nezamipour.mehdi.userinfo.paging.UserLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -26,13 +29,19 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
 
-
-    @Inject
-    lateinit var adapter: UserAdapter
-
+    private val pagingAdapter by lazy { UserAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        pagingAdapter.userClickListener = object : UserClickListener {
+            override fun onUserClicked(user: User) {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
+                        user
+                    )
+                )
+            }
+        }
     }
 
     override fun onCreateView(
@@ -48,46 +57,70 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUi()
         loadData()
-
     }
 
 
     private fun initUi() {
-        binding.homeRecyclerView.addItemDecoration(DividerItemDecoration(
-            requireContext(),
-            DividerItemDecoration.VERTICAL
-        ))
-
+        initAdapter()
+        binding.homeRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
         binding.homeRecyclerView.setHasFixedSize(true)
-        binding.homeRecyclerView.adapter = adapter
-
-
-        /*    viewLifecycleOwner.lifecycleScope.launch {
-                adapter.loadStateFlow.collectLatest { loadStates ->
-                    binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
-                    binding.buttonRetry.isVisible = loadStates.refresh !is LoadState.Loading
-                    binding.textViewError.isVisible = loadStates.refresh is LoadState.Error
-                }
-            }*/
-
     }
 
     @ExperimentalPagingApi
     private fun loadData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getPagingUser().collectLatest {
-                adapter.submitData(it)
+                pagingAdapter.submitData(it)
             }
+        }
+
+
+    }
+
+    private fun initAdapter() {
+        binding.swipeRefresher.setOnRefreshListener {
+            pagingAdapter.refresh()
+        }
+        /* viewLifecycleOwner.lifecycleScope.launch {
+             pagingAdapter.loadStateFlow.distinctUntilChangedBy {
+                 it.refresh
+             }
+                 .filter {
+                     it.refresh is LoadState.NotLoading
+                 }
+                 .collect {
+                     binding.homeRecyclerView.scrollToPosition(0)
+                 }
+         }*/
+        binding.homeRecyclerView.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
+            header = UserLoadStateAdapter { pagingAdapter.retry() },
+            footer = UserLoadStateAdapter { pagingAdapter.retry() }
+        )
+
+        pagingAdapter.addLoadStateListener { loadState ->
+            val refreshState = loadState.mediator?.refresh
+            binding.swipeRefresher.isRefreshing = refreshState is LoadState.Loading
+            handleError(loadState)
+        }
+
+    }
+
+    private fun handleError(loadState: CombinedLoadStates) {
+        val errorState = loadState.source.append as? LoadState.Error
+            ?: loadState.source.prepend as? LoadState.Error
+            ?: loadState.source.refresh as? LoadState.Error
+            ?: loadState.mediator?.refresh as? LoadState.Error
+            ?: loadState.mediator?.append as? LoadState.Error
+            ?: loadState.mediator?.prepend as? LoadState.Error
+
+        errorState?.let {
+            Snackbar.make(requireView(), "Connection lost", Snackbar.LENGTH_SHORT).show()
         }
     }
 
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }
 }

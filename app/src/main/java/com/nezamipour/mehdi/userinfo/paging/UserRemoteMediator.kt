@@ -17,8 +17,12 @@ import javax.inject.Inject
 class UserRemoteMediator @Inject constructor(
     private val appDatabase: AppDatabase,
     private val apiService: ApiService,
-    private val initialPage: Int = 1
+    private val initialPage: Int = 1,
 ) : RemoteMediator<Int, User>() {
+
+    override suspend fun initialize(): InitializeAction {
+        return InitializeAction.LAUNCH_INITIAL_REFRESH
+    }
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, User>): MediatorResult {
         val pageKeyData = getPageKeyData(loadType, state)
@@ -30,46 +34,53 @@ class UserRemoteMediator @Inject constructor(
                 pageKeyData as Int
             }
         }
-        return try {
-            val response = apiService.getUsers(page)
-            val isEndOfList = response.body()?.users?.isEmpty()
+        try {
+            val response = apiService.getUsers(page = page, perPage = state.config.pageSize)
+            val isEndOfList = response.users.isEmpty()
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     appDatabase.remoteKeyDao().deleteAll()
                     appDatabase.userDao().deleteAll()
                 }
-                val prevKey = if (page == 1) null else page - 1
-                val nextKey = if (isEndOfList == true) null else page + 1
-                val keys = response.body()?.users?.map {
+                val prevKey = if (page == initialPage) null else page - 1
+                val nextKey = if (isEndOfList) null else page + 1
+                val keys = response.users.map {
                     RemoteKey(it.id, nextKey = nextKey, prevKey = prevKey)
                 }
-                if (keys != null) {
-                    appDatabase.remoteKeyDao().insertAll(keys)
-                }
-                response.body()?.users?.let { appDatabase.userDao().insertAll(it) }
+
+                appDatabase.remoteKeyDao().insertAll(keys)
+                response.users.let { appDatabase.userDao().insertAll(it) }
             }
-            return MediatorResult.Success(endOfPaginationReached = isEndOfList == true)
+
+            return MediatorResult.Success(endOfPaginationReached = isEndOfList)
 
         } catch (e: IOException) {
-            MediatorResult.Error(e)
+            return MediatorResult.Error(e)
         } catch (e: HttpException) {
-            MediatorResult.Error(e)
+            return MediatorResult.Error(e)
         }
     }
 
     private suspend fun getPageKeyData(loadType: LoadType, state: PagingState<Int, User>): Any {
-        return when (loadType) {
+        val pageKeyData = when (loadType) {
             LoadType.REFRESH -> {
-                initialPage
-            }
-            LoadType.PREPEND -> {
-                return MediatorResult.Success(endOfPaginationReached = true)
+                val remoteKey = getRemoteKeyClosestToCurrentPosition(state)
+                remoteKey?.nextKey?.minus(1) ?: initialPage
             }
             LoadType.APPEND -> {
                 val remoteKey = getLastRemoteKey(state)
-                remoteKey?.nextKey ?: return MediatorResult.Success(endOfPaginationReached = true)
+                val nextKey = remoteKey?.nextKey
+                nextKey ?: return MediatorResult.Success(endOfPaginationReached = false)
+            }
+            LoadType.PREPEND -> {
+                val remoteKey = getFirstRemoteKey(state)
+                val prevKey = remoteKey?.prevKey ?: return MediatorResult.Success(
+                    endOfPaginationReached = false
+                )
+                prevKey
             }
         }
+        return pageKeyData
     }
 
     private suspend fun getLastRemoteKey(state: PagingState<Int, User>): RemoteKey? {
@@ -79,5 +90,20 @@ class UserRemoteMediator @Inject constructor(
             }
     }
 
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, User>): RemoteKey? {
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.id?.let { userId ->
+                appDatabase.remoteKeyDao().getRemoteKey(userId)
+            }
+        }
+    }
+
+    private suspend fun getFirstRemoteKey(state: PagingState<Int, User>): RemoteKey? {
+        return state.pages
+            .firstOrNull { it.data.isNotEmpty() }
+            ?.data?.firstOrNull()
+            ?.let { user -> appDatabase.remoteKeyDao().getRemoteKey(user.id) }
+    }
 
 }
+
