@@ -60,6 +60,19 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar_home"
             tools:src="@drawable/ic_launcher_background" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView_bookmark"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="30dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_bookmark"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_full_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/textView_full_name"
+            app:layout_constraintTop_toTopOf="@+id/textView_full_name" />
+
         <TextView
             android:id="@+id/textView_full_name"
             style="@style/bold_24sp"
@@ -79,11 +92,11 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="30dp"
-            android:fontFamily="@font/roboto_medium"
+            android:fontFamily="@font/roboto_light"
             android:lineSpacingMultiplier="1.5"
-            android:text="@tools:sample/lorem/random"
+            android:text="@string/sample_user_description"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

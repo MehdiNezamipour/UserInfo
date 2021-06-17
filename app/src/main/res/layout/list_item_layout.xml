@@ -5,9 +5,11 @@
     android:id="@+id/cardView_folder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
     android:background="@color/white"
-
-    >
+    app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,7 +19,7 @@
             android:id="@+id/imageView_avatar"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginStart="36dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -27,12 +29,14 @@
             style="@style/bold_18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView_avatar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toEndOf="@+id/imageView_avatar"
             app:layout_constraintTop_toTopOf="@+id/imageView_avatar"
+            app:layout_constraintVertical_bias="0.39"
             tools:text="Mehdi Nezamipour" />
 
         <TextView
@@ -47,6 +51,30 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_name"
             tools:text="item descriptions and samples" />
 
+        <TextView
+            android:id="@+id/textView_bookmarked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_light"
+            android:text="@string/bookmarked"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_avatar"
+            app:layout_constraintStart_toStartOf="@+id/imageView_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_avatar" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView_bookmark"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_bookmark_fill"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_bookmarked"
+            app:layout_constraintEnd_toStartOf="@+id/textView_bookmarked"
+            app:layout_constraintTop_toTopOf="@+id/textView_bookmarked" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

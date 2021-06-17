@@ -1,6 +1,7 @@
 package com.nezamipour.mehdi.userinfo.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -16,6 +17,8 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+
+private const val SHARE_PREF_NAME = "bookmarked_users"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -43,6 +46,12 @@ class SingletonModules {
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "userDB.db")
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharePref(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(SHARE_PREF_NAME, Context.MODE_PRIVATE)
     }
 
 
