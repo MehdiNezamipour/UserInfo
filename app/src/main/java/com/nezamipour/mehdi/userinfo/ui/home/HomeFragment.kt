@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import com.nezamipour.mehdi.userinfo.data.model.User
 import com.nezamipour.mehdi.userinfo.databinding.FragmentHomeBinding
@@ -64,12 +63,6 @@ class HomeFragment : Fragment() {
 
     private fun initUi() {
         initAdapter()
-        binding.homeRecyclerView.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
         binding.homeRecyclerView.setHasFixedSize(true)
     }
 
