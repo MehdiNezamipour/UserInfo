@@ -47,6 +47,30 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_name"
             tools:text="item descriptions and samples" />
 
+        <TextView
+            android:id="@+id/textView_bookmarked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_light"
+            android:text="@string/bookmarked"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_avatar"
+            app:layout_constraintStart_toStartOf="@+id/imageView_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_avatar" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView_bookmark"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_bookmark_fill"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_bookmarked"
+            app:layout_constraintEnd_toStartOf="@+id/textView_bookmarked"
+            app:layout_constraintTop_toTopOf="@+id/textView_bookmarked" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -10,5 +10,6 @@
     <string name="network_error">Network Error</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="sample_user_description">American software engineer, instructor, and best-selling author. He is most recognized for developing many software design principles and for being a founder of the influential Agile Manifesto. Martin has authored many books and magazine articles.</string>
+    <string name="bookmarked">BookMarked</string>
 
 </resources>

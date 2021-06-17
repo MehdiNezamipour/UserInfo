@@ -87,12 +87,5 @@ class DetailsFragment : Fragment() {
             )
     }
 
-    private fun getBookmarkStateFromUi(): Boolean {
-        return when (binding.imageViewBookmark.id) {
-            R.drawable.ic_bookmark -> false
-            else -> true
-        }
-    }
-
 
 }
